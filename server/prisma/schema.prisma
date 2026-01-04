@@ -7,10 +7,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Sale {
+model Stock {
   id          Int      @id @default(autoincrement())
   product     String
-  amount      Float
+  amount      Float 
   price       Float?
   date        DateTime @default(now())
 }

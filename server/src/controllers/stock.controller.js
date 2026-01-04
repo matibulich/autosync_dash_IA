@@ -12,7 +12,7 @@ export async function getStockAnalysis(req, res) {
       });
     }
 
-    const stock = await prisma.sale.findMany({
+    const stock = await prisma.stock.findMany({
       orderBy: { date: "desc" },
       take: 10,
     });
