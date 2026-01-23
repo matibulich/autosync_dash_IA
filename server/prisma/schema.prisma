@@ -9,7 +9,7 @@ generator client {
 
 model Stock {
   id          Int      @id @default(autoincrement())
-  product     String
+  product     String   @unique
   amount      Float 
   price       Float?
   date        DateTime @default(now())

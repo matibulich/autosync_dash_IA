@@ -1,5 +1,5 @@
-import prisma from "../db.js";
 import { analyzeStock } from "../mcp/analyzer.js";
+import { getRecentStock } from "../services/stock.service.js";
 
 export async function getStockAnalysis(req, res) {
   try {
@@ -12,12 +12,9 @@ export async function getStockAnalysis(req, res) {
       });
     }
 
-    const stock = await prisma.stock.findMany({
-      orderBy: { date: "desc" },
-      take: 10,
-    });
+  const stock = await getRecentStock();
 
-    const result = await analyzeStock(stock, prompt);
+  const result = await analyzeStock(stock, prompt);
 
   res.json({
   analysis: result,

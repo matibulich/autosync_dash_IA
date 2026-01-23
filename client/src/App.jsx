@@ -57,38 +57,10 @@ function App() {
     }
   };
 
-  const handleDelete = async (id) => {
 
-  try {
-    await axios.delete(`http://localhost:4000/stock/${id}`);
-    
-    // Actualizamos el estado local quitando el producto borrado
 
-    setStock(prevStock => prevStock.filter(item => item.id !== id));
-    
-    alert("Producto eliminado correctamente");
-  } catch (error) {
-    console.error("Error al eliminar:", error);
-    alert("Hubo un error al intentar eliminar el producto.");
-  }
-};
-
- 
   // Agrupamos los datos antes de renderizar para que no haya barras duplicadas
- const processedData = stock
-  .filter(item => item.amount > 0) // Ignora cualquier error de stock negativo
-  .reduce((acc, curr) => {
-    const name = curr.product ? curr.product.toLowerCase() : "sin nombre";
-    const existing = acc.find(item => item.product.toLowerCase() === name);
-    
-    if (existing) {
-      existing.amount += Number(curr.amount) || 0;
-    } else {
-     acc.push({ product: name, amount: Number(curr.amount) || 0 });
-
-    }
-    return acc;
-  }, []);
+ const processedData = stock.filter(item => item.amount > 0)
 
   return (
     <div className="p-8 max-w-6xl mx-auto">
@@ -138,22 +110,7 @@ function App() {
 
 
       {/* Debajo de la sección del gráfico, dentro de la columna del gráfico */}
-<div className="mt-4 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-  <h3 className="text-lg font-medium mb-3 text-gray-600">Gestionar Items</h3>
-  <div className="max-h-60 overflow-y-auto">
-    {stock.map((item) => (
-      <div key={item.id} className="flex justify-between items-center p-2 hover:bg-gray-50 border-b last:border-0">
-        <span className="text-sm font-medium text-gray-700">{item.product}</span>
-        <button 
-          onClick={() => handleDelete(item.id)}
-          className="text-red-500 hover:text-red-700 text-sm font-bold p-1"
-        >
-          Eliminar
-        </button>
-      </div>
-    ))}
-  </div>
-</div>
+
 
       <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 mt-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-blue-600">
