@@ -1,14 +1,16 @@
 # AutoSync Dashboard
 
-Sistema de control de inventario/stock impulsado por Inteligencia Artificial. Permite gestionar productos, visualizar niveles de stock en tiempo real y realizar consultas en lenguaje natural asistidas por IA.
+Sistema de control de inventario/stock impulsado por Inteligencia Artificial. Permite gestionar productos, visualizar niveles de stock en tiempo real, eliminar productos y realizar consultas en lenguaje natural asistidas por IA.
 
 ## Funcionalidades
 
-- **Gestión de Inventario** — Alta de productos con nombre, cantidad y precio opcional. Si el producto ya existe, se incrementa la cantidad automáticamente.
-- **Dashboard Visual** — Gráfico de barras horizontal que muestra todos los productos con stock > 0, codificado por colores según nivel de stock:
-  - Verde: stock > 15
-  - Amarillo: stock entre 6 y 15
-  - Rojo: stock <= 5
+- **Gestión de Inventario** — Alta de productos con nombre, cantidad y precio opcional. Si el producto ya existe, se incrementa la cantidad automáticamente (upsert).
+- **Dashboard Visual** — Gráfico de barras horizontal que muestra todos los productos con stock > 0, ordenados de mayor a menor cantidad, codificado por colores según nivel de stock:
+  - Verde: stock > 15 (Saludable)
+  - Amarillo: stock entre 6 y 15 (Bajo)
+  - Rojo: stock <= 5 (Crítico)
+- **Eliminar Cantidad** — Al hacer click en una barra del gráfico se abre un panel para reducir la cantidad de ese producto. Si la cantidad a eliminar iguala el stock, el producto se elimina.
+- **Limpiar Inventario** — Botón para eliminar todos los productos del stock de una vez.
 - **Asistente de IA** — Consultas en lenguaje natural sobre los datos de stock, respondidas por el modelo Llama 3.1 8B a través de la API de Groq.
 
 ## Stack Tecnológico
@@ -115,6 +117,8 @@ npm run dev
 |---|---|---|
 | `GET` | `/stock` | Obtiene todos los productos ordenados por fecha |
 | `POST` | `/stock` | Crea un producto o incrementa cantidad si ya existe. Body: `{ product, amount, price? }` |
+| `DELETE` | `/stock` | Elimina todo el inventario |
+| `POST` | `/stock/:id/reduce` | Reduce la cantidad de un producto. Body: `{ amount }`. Si llega a 0, elimina el producto. |
 | `GET` | `/analyze?prompt=...` | Envía una consulta en lenguaje natural + datos actuales de stock al modelo de IA |
 
 ## Comandos Disponibles
