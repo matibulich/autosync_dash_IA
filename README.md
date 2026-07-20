@@ -138,15 +138,6 @@ Crear un archivo `.env` en la raíz del proyecto.
 GROQ_API_KEY=TU_API_KEY
 DB_PASSWORD=TU_PASSWORD
 ```
-
-También podés copiar el archivo de ejemplo:
-
-```bash
-cp .env.example .env
-```
-
-Luego completá tus credenciales.
-
 > **Nota:** Si no definís `DB_PASSWORD`, Docker utilizará `autosync123` automáticamente.
 
 ---
