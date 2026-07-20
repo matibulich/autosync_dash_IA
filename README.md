@@ -1,266 +1,403 @@
-# AutoSync Dashboard
+# 📦 AutoSync Dashboard
 
-Sistema de control de inventario/stock impulsado por Inteligencia Artificial. Permite gestionar productos, visualizar niveles de stock en tiempo real, eliminar productos y realizar consultas en lenguaje natural asistidas por IA.
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-22-339933?logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express-5-black?logo=express)
+![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?logo=prisma)
+![MySQL](https://img.shields.io/badge/MySQL-8-4479A1?logo=mysql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)
+![License](https://img.shields.io/badge/Portfolio-Educational-blue)
+
+Sistema de **gestión de inventario inteligente** desarrollado con **React, Node.js, Express, Prisma y MySQL**, con integración de **Inteligencia Artificial** mediante **Groq + Llama 3.1 8B**.
+
+Permite administrar productos, visualizar el estado del inventario en tiempo real y realizar consultas en lenguaje natural sobre los datos almacenados.
+
+---
+
+## 📸 Captura
 
 ![AutoSync Dashboard](autosync.png)
 
-## Funcionalidades
+---
 
-- **Gestión de Inventario** — Alta de productos con nombre, cantidad y precio opcional. Si el producto ya existe, se incrementa la cantidad automáticamente (upsert).
-- **Dashboard Visual** — Gráfico de barras horizontal que muestra todos los productos con stock > 0, ordenados de mayor a menor cantidad, codificado por colores según nivel de stock:
-  - 🟢 Verde: stock > 15 (Saludable)
-  - 🟡 Amarillo: stock entre 6 y 15 (Bajo)
-  - 🔴 Rojo: stock <= 5 (Crítico)
-- **Eliminar Cantidad** — Al hacer click en una barra del gráfico se abre un panel para reducir la cantidad de ese producto. Si la cantidad a eliminar iguala el stock, el producto se elimina.
-- **Limpiar Inventario** — Botón para eliminar todos los productos del stock de una vez (con confirmación).
-- **Asistente de IA** — Consultas en lenguaje natural sobre los datos de stock, respondidas por el modelo Llama 3.1 8B a través de la API de Groq.
+# 🚀 Características
 
-## Stack Tecnológico
+- ✅ Gestión de inventario mediante operaciones CRUD
+- ✅ Dashboard interactivo con gráficos
+- ✅ Colores dinámicos según nivel de stock
+- ✅ Eliminación parcial o total de productos
+- ✅ Persistencia de datos con MySQL
+- ✅ Arquitectura Backend en capas
+- ✅ Prisma ORM
+- ✅ Docker Compose
+- ✅ Integración con IA (Groq + Llama 3.1)
+- ✅ API REST
 
-### Frontend (`client/`)
+---
 
-| Tecnología | Versión | Descripción |
-|---|---|---|
-| React | 19.1.1 | Framework UI |
-| Vite (SWC) | 7.1.7 | Dev server y build tool |
-| Recharts | 3.4.1 | Gráficos (BarChart horizontal) |
-| Axios | 1.13.2 | Cliente HTTP |
-| Tailwind CSS | CDN | Estilos utility-first |
+# 🛠 Stack Tecnológico
 
-### Backend (`server/`)
+## Frontend
 
-| Tecnología | Versión | Descripción |
-|---|---|---|
-| Node.js + Express | 5.1.0 | Servidor REST API |
-| Prisma ORM | 6.18.0 | Capa de acceso a base de datos |
-| MySQL | — | Base de datos relacional |
-| Groq SDK | 0.35.0 | Integración con Llama 3.1 8B |
+| Tecnología | Uso |
+|------------|-----|
+| React 19 | UI |
+| Vite | Bundler |
+| Axios | Cliente HTTP |
+| Recharts | Dashboard |
+| Tailwind CSS | Estilos |
 
-## Arquitectura
+---
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        NAVEGADOR (Frontend)                      │
-│  React 19 · Vite 7 · Recharts · Tailwind CSS · Axios           │
-│  App.jsx (dashboard principal) + StockForm.jsx (formulario)     │
-└────────────────────────────┬────────────────────────────────────┘
-                             │ HTTP (Axios)
-                             �
-┌────────────────────────────▼────────────────────────────────────┐
-│                  SERVIDOR EXPRESS (puerto 4000)                  │
-│  routes.js → controllers/ → services/ → Prisma ORM             │
-│  analyzer.js ──────────────────────────────┐                    │
-└────────────────────────────┬───────────────┘                    │
-                             │                                    │
-              ┌──────────────▼──────────────┐                     │
-              │          MySQL              │   ┌─────────────────┐│
-              │   (PrismaClient singleton)  │   │   Groq Cloud    ││
-              │                             │   │ (Llama 3.1 8B)  ││
-              └─────────────────────────────┘   └─────────────────┘
-```
+## Backend
 
-### Arquitectura Backend (capas)
+| Tecnología | Uso |
+|------------|-----|
+| Node.js | Runtime |
+| Express | API REST |
+| Prisma ORM | Acceso a datos |
+| MySQL | Base de datos |
+| Groq SDK | IA |
+
+---
+
+# 🏛 Arquitectura
 
 ```
-routes.js          → Maneja HTTP request/response, validación
-stock.controller.js → Orquestación lógica (análisis IA)
-stock.service.js    → Capa de acceso a datos (Prisma queries)
-analyzer.js         → Integración con Groq AI
-db.js               → Singleton PrismaClient
+React
+   │
+Axios
+   │
+Express
+   │
+Controllers
+   │
+Services
+   │
+Prisma ORM
+   │
+MySQL
+
+             │
+
+      Groq API (Llama 3.1)
 ```
 
-### Modelo de Datos
+---
 
-```prisma
-model Stock {
-  id        Int      @id @default(autoincrement())
-  product   String   @unique     // Nombre único del producto
-  amount    Float                 // Cantidad en inventario
-  price     Float?                // Precio (opcional)
-  date      DateTime @default(now())
-}
+## Arquitectura Backend
+
+```
+routes
+    │
+controllers
+    │
+services
+    │
+Prisma Client
+    │
+MySQL
 ```
 
-## Estructura del Proyecto
+---
+
+# 📂 Estructura
 
 ```
 autosync-dashboard/
-├── client/                          # Frontend (React + Vite)
-│   ├── src/
-│   │   ├── App.jsx                  # Dashboard principal (gráfico + consultas IA)
-│   │   ├── StockForm.jsx            # Formulario de alta de productos
-│   │   ├── main.jsx                 # Entry point de React
-│   │   └── index.css                # Estilos globales (fuentes, tema)
-│   ├── index.html                   # Entry HTML (carga Tailwind CDN)
-│   ├── vite.config.js               # Configuración Vite con SWC
-│   ├── eslint.config.js             # ESLint flat config
-│   ├── Dockerfile                   # Build multi-stage (build + nginx)
-│   ├── nginx.conf                   # Configuración nginx para produccion
-│   └── package.json
-│
-├── server/                          # Backend (Express + Prisma + Groq)
-│   ├── src/
-│   │   ├── index.js                 # Servidor Express (puerto 4000)
-│   │   ├── db.js                    # Cliente Prisma (singleton)
-│   │   ├── routes/
-│   │   │   └── routes.js            # Todas las rutas de la API
-│   │   ├── controllers/
-│   │   │   └── stock.controller.js  # Controlador de análisis IA
-│   │   ├── services/
-│   │   │   └── stock.service.js     # Capa de acceso a datos
-│   │   └── mcp/
-│   │       └── analyzer.js          # Integración con Groq AI
-│   ├── prisma/
-│   │   ├── schema.prisma            # Modelo de datos
-│   │   └── migrations/              # 5 migraciones históricas
-│   ├── Dockerfile                   # Imagen Node.js Alpine
-│   ├── .env                         # Variables de entorno (no commitear)
-│   └── package.json
-│
-├── docker-compose.yml               # Orquestación de servicios Docker
-├── .dockerignore                    # Archivos excluidos del build Docker
-├── autosync.png                     # Screenshot del dashboard
-└── README.md
+
+client/
+server/
+
+docker-compose.yml
+
+README.md
 ```
 
-## Requisitos Previos
+---
 
-- [Node.js](https://nodejs.org/) v18+
-- [Docker](https://www.docker.com/) y Docker Compose (para ejecutar con contenedores)
-- MySQL ejecutándose localmente (solo si se ejecuta sin Docker)
-- API Key de [Groq](https://console.groq.com/) (tier gratuito disponible)
+# ⚙️ Requisitos
 
-## Instalación y Configuración
+## Con Docker (Recomendado)
 
-### 1. Clonar el repositorio
+- Docker Desktop
+
+## Sin Docker
+
+- Node.js 18+
+- MySQL
+- API Key de Groq
+
+---
+
+# 🔑 Variables de entorno
+
+Crear un archivo `.env` en la raíz del proyecto.
+
+```env
+GROQ_API_KEY=TU_API_KEY
+DB_PASSWORD=TU_PASSWORD
+```
+
+También podés copiar el archivo de ejemplo:
+
+```bash
+cp .env.example .env
+```
+
+Luego completá tus credenciales.
+
+> **Nota:** Si no definís `DB_PASSWORD`, Docker utilizará `autosync123` automáticamente.
+
+---
+
+# 🐳 Ejecutar con Docker
+
+Clonar el repositorio
 
 ```bash
 git clone https://github.com/matibulich/autosync_dash_IA.git
+
 cd autosync_dash_IA
 ```
 
-### 2. Configurar variables de entorno
-
-Crear el archivo `.env` en la raíz del proyecto:
-
-```env
-GROQ_API_KEY="gsk_..."
-DB_PASSWORD="autosync123"
-```
-
-### Opción A: Ejecutar con Docker (Recomendado)
-
-Levantar todos los servicios (MySQL, Backend, Frontend) con un solo comando:
+Construir las imágenes e iniciar los servicios
 
 ```bash
-docker compose up --build
+docker compose up -d --build
 ```
 
-Esto inicia:
+Servicios disponibles
 
-| Servicio | Puerto | Descripción |
-|---|---|---|
-| MySQL | `3307` | Base de datos |
-| Server | `4000` | API Express |
-| Client | `3000` | Dashboard React |
+| Servicio | Puerto |
+|-----------|---------|
+| Frontend | 3000 |
+| Backend | 4000 |
+| MySQL | 3307 |
 
-El dashboard estará disponible en **http://localhost:3000**.
+Abrir en el navegador
 
-Para detener los servicios:
+```
+http://localhost:3000
+```
+
+Ver logs
+
+```bash
+docker compose logs -f
+```
+
+Detener
 
 ```bash
 docker compose down
 ```
 
-Para detener y eliminar los datos (volumen MySQL):
+Eliminar también la base de datos
 
 ```bash
 docker compose down -v
 ```
 
-### Opción B: Ejecutar sin Docker
+---
 
-Configurar variables de entorno del servidor en `server/.env`:
+# 💻 Ejecutar sin Docker
 
-```env
-DATABASE_URL="mysql://usuario:password@localhost:3306/autosync_dashboard"
-GROQ_API_KEY="gsk_..."
-```
-
-Configurar la base de datos:
+Backend
 
 ```bash
 cd server
-npx prisma migrate dev
-npx prisma generate
-```
 
-Iniciar **Backend** (puerto 4000):
-
-```bash
-cd server
 npm install
+
+npx prisma migrate dev
+
+npx prisma generate
+
 npm run dev
 ```
 
-Iniciar **Frontend** (puerto 5173):
+Frontend
 
 ```bash
 cd client
+
 npm install
+
 npm run dev
 ```
 
-> **Nota:** El servidor debe estar corriendo en el puerto 4000 antes de iniciar el cliente.
+---
 
-## Endpoints de la API
+# 📡 Endpoints
 
-| Método | Ruta | Body / Query | Descripción |
-|---|---|---|---|
-| `GET` | `/stock` | — | Obtiene todos los productos ordenados por fecha (desc) |
-| `POST` | `/stock` | `{ product, amount, price? }` | Crea un producto o incrementa cantidad si ya existe (upsert) |
-| `DELETE` | `/stock` | — | Elimina todo el inventario |
-| `POST` | `/stock/:id/reduce` | `{ amount }` | Reduce cantidad; si llega a 0, elimina el producto |
-| `GET` | `/analyze` | `?prompt=<texto>` | Envía consulta en lenguaje natural + stock completo a la IA |
+| Método | Endpoint | Descripción |
+|---------|----------|-------------|
+| GET | /stock | Obtener productos |
+| POST | /stock | Crear producto |
+| DELETE | /stock | Eliminar inventario |
+| POST | /stock/:id/reduce | Reducir stock |
+| GET | /analyze | Consulta IA |
 
-## Comandos Disponibles
+---
 
-### Cliente (`client/`)
+# 🧠 Integración con IA
 
-| Comando | Descripción |
-|---|---|
-| `npm run dev` | Iniciar servidor de desarrollo Vite |
-| `npm run build` | Build de producción |
-| `npm run lint` | Verificación con ESLint |
+Las consultas del usuario son enviadas al modelo:
 
-### Servidor (`server/`)
+**Llama 3.1 8B**
 
-| Comando | Descripción |
-|---|---|
-| `npm run dev` | Iniciar servidor Express en puerto 4000 |
-| `npm run start` | Iniciar en modo producción |
-| `npx prisma migrate dev` | Ejecutar migraciones de base de datos |
-| `npx prisma generate` | Regenerar cliente Prisma |
-| `npx prisma studio` | Abrir Prisma Studio (editor visual de datos) |
+mediante la API de **Groq**.
 
-## Patrones de Código
+El modelo recibe:
 
-- **Estado:** `useState` hooks en App.jsx (sin librería externa de estado)
-- **Estilos:** Tailwind CSS via CDN (clases utility-first inline)
-- **HTTP:** Axios para todas las llamadas API
-- **URL Base:** Constante `const API = "http://localhost:4000"` en App.jsx
-- **Componentes:** App.jsx (principal) + StockForm.jsx (formulario)
-- **Base de datos:** Patrón Singleton para PrismaClient (db.js)
-- **Backend:** Arquitectura en capas (routes → controllers → services)
+- Inventario completo
+- Pregunta del usuario
 
-## Notas Importantes
+y responde utilizando únicamente los datos almacenados.
 
-- Los datos de stock con `amount <= 0` no se muestran en el gráfico
-- El botón "Limpiar Inventario" se deshabilita si no hay productos
-- Si la eliminación de cantidad iguala el stock, el producto se elimina automáticamente
-- El modelo de IA recibe todos los datos de stock + la pregunta del usuario para generar su respuesta
-- La base de datos tiene 5 migraciones históricas (evolucionó de modelo "Sale" a "Stock")
+---
 
-## Licencia
+# 🗄 Modelo de Datos
 
-Este proyecto es privado.
+```prisma
+model Stock {
+  id        Int      @id @default(autoincrement())
+  product   String   @unique
+  amount    Float
+  price     Float?
+  date      DateTime @default(now())
+}
+```
+
+---
+
+# 📦 Docker
+
+El proyecto utiliza tres contenedores.
+
+```
+client
+│
+├── React
+│
+server
+│
+├── Express
+│
+db
+│
+└── MySQL
+```
+
+Todo el entorno puede iniciarse mediante un único comando.
+
+```
+docker compose up -d --build
+```
+
+---
+
+# 📜 Scripts
+
+## Cliente
+
+```
+npm run dev
+npm run build
+npm run lint
+```
+
+## Servidor
+
+```
+npm run dev
+npm start
+npx prisma migrate dev
+npx prisma generate
+npx prisma studio
+```
+
+---
+
+# 🛠 Solución de Problemas
+
+## El puerto ya está ocupado
+
+```bash
+docker compose down
+```
+
+---
+
+## Error con Prisma
+
+```bash
+docker compose down -v
+
+docker compose up --build
+```
+
+---
+
+## Error con Groq
+
+Verificar que la variable
+
+```
+GROQ_API_KEY
+```
+
+sea válida.
+
+---
+
+## Error al conectar con MySQL
+
+Verificar que el archivo `.env` contenga:
+
+```env
+DB_PASSWORD=tu_password
+```
+
+Si no se especifica, Docker utilizará
+
+```
+autosync123
+```
+
+---
+
+# 📈 Posibles mejoras
+
+- Autenticación JWT
+- Roles de usuario
+- Historial de movimientos
+- Exportación CSV / Excel
+- Dashboard con métricas
+- Alertas automáticas de stock
+- Deploy automático mediante CI/CD
+
+---
+
+# 👨‍💻 Autor
+
+**Matías Bulich**
+
+Full Stack JavaScript Developer
+
+GitHub
+
+https://github.com/matibulich
+
+LinkedIn
+
+https://www.linkedin.com/in/matias-bulich/
+
+---
+
+# 📄 Licencia
+
+Proyecto desarrollado con fines educativos y como parte de mi portfolio profesional.
+
+No se permite su redistribución comercial sin autorización del autor.
