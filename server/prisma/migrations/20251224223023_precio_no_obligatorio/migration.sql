@@ -5,7 +5,7 @@
 
 */
 -- DropTable
-DROP TABLE `sale`;
+DROP TABLE `Sale`;
 
 -- CreateTable
 CREATE TABLE `Stock` (

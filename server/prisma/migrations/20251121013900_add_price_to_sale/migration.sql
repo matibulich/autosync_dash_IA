@@ -1,2 +1,2 @@
 -- AlterTable
-ALTER TABLE `sale` MODIFY `price` DOUBLE NULL;
+ALTER TABLE `Sale` MODIFY `price` DOUBLE NULL;

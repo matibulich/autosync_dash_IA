@@ -90,11 +90,12 @@ autosync-dashboard/
 │   │   ├── App.jsx                  # Dashboard principal (gráfico + consultas IA)
 │   │   ├── StockForm.jsx            # Formulario de alta de productos
 │   │   ├── main.jsx                 # Entry point de React
-│   │   ├── index.css                # Estilos globales (fuentes, tema)
-│   │   └── App.css                  # Estilos boilerplate de Vite
+│   │   └── index.css                # Estilos globales (fuentes, tema)
 │   ├── index.html                   # Entry HTML (carga Tailwind CDN)
 │   ├── vite.config.js               # Configuración Vite con SWC
 │   ├── eslint.config.js             # ESLint flat config
+│   ├── Dockerfile                   # Build multi-stage (build + nginx)
+│   ├── nginx.conf                   # Configuración nginx para produccion
 │   └── package.json
 │
 ├── server/                          # Backend (Express + Prisma + Groq)
@@ -112,17 +113,21 @@ autosync-dashboard/
 │   ├── prisma/
 │   │   ├── schema.prisma            # Modelo de datos
 │   │   └── migrations/              # 5 migraciones históricas
-│   ├── schema.env                   # Plantilla de variables de entorno
+│   ├── Dockerfile                   # Imagen Node.js Alpine
 │   ├── .env                         # Variables de entorno (no commitear)
 │   └── package.json
 │
+├── docker-compose.yml               # Orquestación de servicios Docker
+├── .dockerignore                    # Archivos excluidos del build Docker
+├── autosync.png                     # Screenshot del dashboard
 └── README.md
 ```
 
 ## Requisitos Previos
 
 - [Node.js](https://nodejs.org/) v18+
-- MySQL ejecutándose localmente
+- [Docker](https://www.docker.com/) y Docker Compose (para ejecutar con contenedores)
+- MySQL ejecutándose localmente (solo si se ejecuta sin Docker)
 - API Key de [Groq](https://console.groq.com/) (tier gratuito disponible)
 
 ## Instalación y Configuración
@@ -136,14 +141,53 @@ cd autosync_dash_IA
 
 ### 2. Configurar variables de entorno
 
-Crear el archivo `server/.env` basándose en `server/schema.env`:
+Crear el archivo `.env` en la raíz del proyecto:
+
+```env
+GROQ_API_KEY="gsk_..."
+DB_PASSWORD="autosync123"
+```
+
+### Opción A: Ejecutar con Docker (Recomendado)
+
+Levantar todos los servicios (MySQL, Backend, Frontend) con un solo comando:
+
+```bash
+docker compose up --build
+```
+
+Esto inicia:
+
+| Servicio | Puerto | Descripción |
+|---|---|---|
+| MySQL | `3307` | Base de datos |
+| Server | `4000` | API Express |
+| Client | `3000` | Dashboard React |
+
+El dashboard estará disponible en **http://localhost:3000**.
+
+Para detener los servicios:
+
+```bash
+docker compose down
+```
+
+Para detener y eliminar los datos (volumen MySQL):
+
+```bash
+docker compose down -v
+```
+
+### Opción B: Ejecutar sin Docker
+
+Configurar variables de entorno del servidor en `server/.env`:
 
 ```env
 DATABASE_URL="mysql://usuario:password@localhost:3306/autosync_dashboard"
 GROQ_API_KEY="gsk_..."
 ```
 
-### 3. Configurar la base de datos
+Configurar la base de datos:
 
 ```bash
 cd server
@@ -151,9 +195,7 @@ npx prisma migrate dev
 npx prisma generate
 ```
 
-### 4. Instalar dependencias e iniciar
-
-**Backend** (puerto 4000):
+Iniciar **Backend** (puerto 4000):
 
 ```bash
 cd server
@@ -161,7 +203,7 @@ npm install
 npm run dev
 ```
 
-**Frontend** (puerto 5173):
+Iniciar **Frontend** (puerto 5173):
 
 ```bash
 cd client

@@ -13,7 +13,7 @@ import {
 import StockForm from "./StockForm";
 import "./App.css";
 
-const API = "http://localhost:4000";
+const API = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
 const getBarColor = (amount) => {
   if (amount <= 5) return "#ef4444";

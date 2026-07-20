@@ -25,7 +25,8 @@ const StockForm = ({ onProductCreated }) => {
         price: parseFloat(formData.price)
       };
 
-      const res = await axios.post("http://localhost:4000/stock", dataToSend);
+      const apiBase = import.meta.env.VITE_API_URL || "http://localhost:4000";
+      const res = await axios.post(`${apiBase}/stock`, dataToSend);
       
       // Notificamos al padre para que actualice la lista
       if (onProductCreated) onProductCreated(res.data);
